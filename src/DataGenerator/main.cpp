@@ -144,13 +144,19 @@ int main(int argc, char **argv)
 
 						IplImage *image = cvCreateImage(cvSize(W, H), IPL_DEPTH_8U, 3);
 
+						const int w = image->width;
+						const int h = image->height;
+
+						const int w2 = w / 2;
+						const int h2 = h / 2;
+
 #if 1
 						// A
 						CvMat *a = cvCreateMat(4, 4, CV_32F);
-						cvmSet(a, 0, 0, image1->width / 2); cvmSet(a, 0, 1, 0.0);                                              cvmSet(a, 0, 2, image->width / 2);  cvmSet(a, 0, 3, 0.0);
-						cvmSet(a, 1, 0, 0.0);               cvmSet(a, 1, 1, image1->width / 2 * image->height / image->width); cvmSet(a, 1, 2, image->height / 2); cvmSet(a, 1, 3, 0.0);
-						cvmSet(a, 2, 0, 0.0);               cvmSet(a, 2, 1, 0.0);                                              cvmSet(a, 2, 2, 1.0);               cvmSet(a, 2, 3, 0.0);
-						cvmSet(a, 3, 0, 0.0);               cvmSet(a, 3, 1, 0.0);                                              cvmSet(a, 3, 2, 0.0);               cvmSet(a, 3, 3, 1.0);
+						cvmSet(a, 0, 0, w2);  cvmSet(a, 0, 1, 0.0); cvmSet(a, 0, 2, w2);  cvmSet(a, 0, 3, 0.0);
+						cvmSet(a, 1, 0, 0.0); cvmSet(a, 1, 1, w2);  cvmSet(a, 1, 2, h2);  cvmSet(a, 1, 3, 0.0);
+						cvmSet(a, 2, 0, 0.0); cvmSet(a, 2, 1, 0.0); cvmSet(a, 2, 2, 1.0); cvmSet(a, 2, 3, 0.0);
+						cvmSet(a, 3, 0, 0.0); cvmSet(a, 3, 1, 0.0); cvmSet(a, 3, 2, 0.0); cvmSet(a, 3, 3, 1.0);
 
 						// R
 						CvMat *r = cvCreateMat(3, 3, CV_32F);
