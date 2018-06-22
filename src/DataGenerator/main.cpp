@@ -150,11 +150,19 @@ int main(int argc, char **argv)
 						const int w2 = w / 2;
 						const int h2 = h / 2;
 
+						const float theta_x = 0;
+						const float theta_y = 0;
+						const float theta_z = index;
+
+						const float tx = 0;
+						const float ty = 0;
+						const float tz = image1->width;
+
 #if 1
 						// A
 						CvMat *a = cvCreateMat(4, 4, CV_32F);
-						cvmSet(a, 0, 0, w2);  cvmSet(a, 0, 1, 0.0); cvmSet(a, 0, 2, w2);  cvmSet(a, 0, 3, 0.0);
-						cvmSet(a, 1, 0, 0.0); cvmSet(a, 1, 1, w2);  cvmSet(a, 1, 2, h2);  cvmSet(a, 1, 3, 0.0);
+						cvmSet(a, 0, 0, w);   cvmSet(a, 0, 1, 0.0); cvmSet(a, 0, 2, w2);  cvmSet(a, 0, 3, 0.0);
+						cvmSet(a, 1, 0, 0.0); cvmSet(a, 1, 1, w);   cvmSet(a, 1, 2, h2);  cvmSet(a, 1, 3, 0.0);
 						cvmSet(a, 2, 0, 0.0); cvmSet(a, 2, 1, 0.0); cvmSet(a, 2, 2, 1.0); cvmSet(a, 2, 3, 0.0);
 						cvmSet(a, 3, 0, 0.0); cvmSet(a, 3, 1, 0.0); cvmSet(a, 3, 2, 0.0); cvmSet(a, 3, 3, 1.0);
 
@@ -164,7 +172,6 @@ int main(int argc, char **argv)
 						cvmSet(r, 1, 0, 0.0); cvmSet(r, 1, 1, 1.0); cvmSet(r, 1, 2, 0.0);
 						cvmSet(r, 2, 0, 0.0); cvmSet(r, 2, 1, 0.0); cvmSet(r, 2, 2, 1.0);
 
-						const float theta_x = index;
 						const float theta_x_rad = theta_x / 180 * 3.141592f;
 						CvMat *rx = cvCreateMat(3, 3, CV_32F);
 						cvmSet(rx, 0, 0, cos(theta_x_rad)); cvmSet(rx, 0, 1, -sin(theta_x_rad)); cvmSet(rx, 0, 2, 0.0);
@@ -172,18 +179,18 @@ int main(int argc, char **argv)
 						cvmSet(rx, 2, 0, 0.0);              cvmSet(rx, 2, 1, 0.0);               cvmSet(rx, 2, 2, 1.0);
 						printCvMat(rx);
 
-						const float theta_y = 0;
+						const float theta_y_rad = theta_y / 180 * 3.141592f;
 						CvMat *ry = cvCreateMat(3, 3, CV_32F);
-						cvmSet(ry, 0, 0, 1.0); cvmSet(ry, 0, 1, 0.0);                            cvmSet(ry, 0, 2, 0.0);
-						cvmSet(ry, 1, 0, 0.0); cvmSet(ry, 1, 1, cos(theta_y / 180 * 3.141592f)); cvmSet(ry, 1, 2, -sin(theta_y / 180 * 3.141592f));
-						cvmSet(ry, 2, 0, 0.0); cvmSet(ry, 2, 1, sin(theta_y / 180 * 3.141592f)); cvmSet(ry, 2, 2,  cos(theta_y / 180 * 3.141592f));
+						cvmSet(ry, 0, 0, 1.0); cvmSet(ry, 0, 1, 0.0);              cvmSet(ry, 0, 2, 0.0);
+						cvmSet(ry, 1, 0, 0.0); cvmSet(ry, 1, 1, cos(theta_y_rad)); cvmSet(ry, 1, 2, -sin(theta_y_rad));
+						cvmSet(ry, 2, 0, 0.0); cvmSet(ry, 2, 1, sin(theta_y_rad)); cvmSet(ry, 2, 2,  cos(theta_y_rad));
 						printCvMat(ry);
 
-						const float theta_z = 0;
+						const float theta_z_rad = theta_z / 180 * 3.141592f;
 						CvMat *rz = cvCreateMat(3, 3, CV_32F);
-						cvmSet(rz, 0, 0,  cos(theta_z / 180 * 3.141592f)); cvmSet(rz, 0, 1, 0.0); cvmSet(rz, 0, 2, sin(theta_z / 180 * 3.141592f));
-						cvmSet(rz, 1, 0, 0);                               cvmSet(rz, 1, 1, 1.0); cvmSet(rz, 1, 2, 0.0);
-						cvmSet(rz, 2, 0, -sin(theta_z / 180 * 3.141592f)); cvmSet(rz, 2, 1, 0.0); cvmSet(rz, 2, 2, cos(theta_z / 180 * 3.141592f));
+						cvmSet(rz, 0, 0,  cos(theta_z_rad)); cvmSet(rz, 0, 1, 0.0); cvmSet(rz, 0, 2, sin(theta_z_rad));
+						cvmSet(rz, 1, 0, 0);                 cvmSet(rz, 1, 1, 1.0); cvmSet(rz, 1, 2, 0.0);
+						cvmSet(rz, 2, 0, -sin(theta_z_rad)); cvmSet(rz, 2, 1, 0.0); cvmSet(rz, 2, 2, cos(theta_z_rad));
 						printCvMat(rz);
 
 						cvMatMul(rx, r, r);
@@ -200,9 +207,9 @@ int main(int argc, char **argv)
 						cvmSet(T0, 3, 0, 0); cvmSet(T0, 3, 1, 0); cvmSet(T0, 3, 2, 0); cvmSet(T0, 3, 3, 1);
 
 						CvMat *T = cvCreateMat(4, 4, CV_32F);
-						cvmSet(T, 0, 0, 1); cvmSet(T, 0, 1, 0); cvmSet(T, 0, 2, 0); cvmSet(T, 0, 3, 0);
-						cvmSet(T, 1, 0, 0); cvmSet(T, 1, 1, 1); cvmSet(T, 1, 2, 0); cvmSet(T, 1, 3, 0);
-						cvmSet(T, 2, 0, 0); cvmSet(T, 2, 1, 0); cvmSet(T, 2, 2, 1); cvmSet(T, 2, 3, image1->width);
+						cvmSet(T, 0, 0, 1); cvmSet(T, 0, 1, 0); cvmSet(T, 0, 2, 0); cvmSet(T, 0, 3, tx);
+						cvmSet(T, 1, 0, 0); cvmSet(T, 1, 1, 1); cvmSet(T, 1, 2, 0); cvmSet(T, 1, 3, ty);
+						cvmSet(T, 2, 0, 0); cvmSet(T, 2, 1, 0); cvmSet(T, 2, 2, 1); cvmSet(T, 2, 3, tz);
 						cvmSet(T, 3, 0, 0); cvmSet(T, 3, 1, 0); cvmSet(T, 3, 2, 0); cvmSet(T, 3, 3, 1);
 
 						// K = RI
