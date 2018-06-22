@@ -231,8 +231,44 @@ int main(int argc, char **argv)
 						cvmSet(homography, 0, 0, cvmGet(ak, 0, 0)); cvmSet(homography, 0, 1, cvmGet(ak, 0, 1)); cvmSet(homography, 0, 2, cvmGet(ak, 0, 3));
 						cvmSet(homography, 1, 0, cvmGet(ak, 1, 0)); cvmSet(homography, 1, 1, cvmGet(ak, 1, 1)); cvmSet(homography, 1, 2, cvmGet(ak, 1, 3));
 						cvmSet(homography, 2, 0, cvmGet(ak, 2, 0)); cvmSet(homography, 2, 1, cvmGet(ak, 2, 1)); cvmSet(homography, 2, 2, cvmGet(ak, 2, 3));
+						printCvMat(homography);
 
 						cvWarpPerspective(image1, image, homography, 9, CV_RGB(128,128,255));
+
+						const float h00 = cvmGet(homography, 0, 0);
+						const float h01 = cvmGet(homography, 0, 1);
+						const float h02 = cvmGet(homography, 0, 2);
+
+						const float h10 = cvmGet(homography, 1, 0);
+						const float h11 = cvmGet(homography, 1, 1);
+						const float h12 = cvmGet(homography, 1, 2);
+
+						const float h20 = cvmGet(homography, 2, 0);
+						const float h21 = cvmGet(homography, 2, 1);
+						const float h22 = cvmGet(homography, 2, 2);
+
+						const float ltx = (0 * h00 + 0 * h01 + 1 * h02) / (0 * h20 + 0 * h21 * 1 + h22);
+						const float lty = (0 * h10 + 0 * h11 + 1 * h12) / (0 * h20 + 0 * h21 * 1 + h22);
+						printf("ltx: %7.4f, lty: %7.4f\n", ltx, lty);
+
+						const float rtx = (image1->width * h00 + 0 * h01 + 1 * h02) / (image1->width * h20 + 0 * h21 + 1 * h22);
+						const float rty = (image1->width * h10 + 0 * h11 + 1 * h12) / (image1->width * h20 + 0 * h21 + 1 * h22);
+						printf("rtx: %7.4f, rty: %7.4f\n", rtx, rty);
+
+						const float rbx = (image1->width * h00 + image1->height * h01 + 1 * h02) / (image1->width * h20 + image1->height * h21 + 1 * h22);
+						const float rby = (image1->width * h10 + image1->height * h11 + 1 * h12) / (image1->width * h20 + image1->height * h21 + 1 * h22);
+						printf("rbx: %7.4f, rby: %7.4f\n", rbx, rby);
+
+						const float lbx = (0 * h00 + image1->height * h01 + 1 * h02) / (0 * h20 + image1->height * h21 + 1 * h22);
+						const float lby = (0 * h10 + image1->height * h11 + 1 * h12) / (0 * h20 + image1->height * h21 + 1 * h22);
+						printf("lbx: %7.4f, lby: %7.4f\n", lbx, lby);
+
+						const float p0x = min(min(ltx, rtx), min(lbx, rbx));
+						const float p0y = min(min(lty, rty), min(lby, rby));
+						const float p1x = max(max(ltx, rtx), max(lbx, rbx));
+						const float p1y = max(max(lty, rty), max(lby, rby));
+
+						cvRectangle(image, cvPoint(p0x, p0y), cvPoint(p1x, p1y), CV_RGB(255, 0, 0));
 
 						cvReleaseMat(&T);
 
