@@ -6,9 +6,9 @@ Logo Detection
 ## Requirement
 
 This code is tested with the following configuration:
-- Ubuntu 16.4 LTS
-- Python
-- Tensorflow
+- OS: Ubuntu 16.4 LTS
+- Libraries: Python
+- ML Framework: Tensorflow
 
 ## Usage
 
@@ -17,7 +17,7 @@ This code is tested with the following configuration:
 3. `$ python gen_train_valid_test.py`: Generate(Split) train/valid/test set from the dataset.
 4. `$ python train_deep_logo_cnn.py`: Train the convolutional neural networks and save the trained model to disk.
 5. `$ python test_deep_logo_cnn.py`: Test the trained model (for Classification).  
-`python detect_logo.py`: Test the trained model (for Detection)
+`$ python detect_logo.py`: Test the trained model (for Detection)
 
 ## License
 

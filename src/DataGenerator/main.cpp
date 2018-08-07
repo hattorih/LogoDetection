@@ -6,8 +6,17 @@
 #include <windows.h>
 
 
-const int W = 640;
-const int H = 360;
+const int W = 1920;
+const int H = 1080;
+
+const float aspect = (float)W / (float)H;
+const float aspectInv = 1.0f / aspect;
+
+const float sensorW = 36.0; // [mm]
+const float sensorH = sensorW * aspectInv; // [mm]
+
+const float scaleMM2Pix = W / sensorW;
+const float scalePix2MM = 1.0f / scaleMM2Pix;
 
 
 int find(const std::string &dir, std::vector<std::string> &filenames)
@@ -73,17 +82,22 @@ int find(const std::string &dir, std::vector<std::string> &filenames)
 }
 
 
-void printCvMat(const CvMat *m)
+void prtCvMat(const CvMat *m, const std::string &name)
 {
-	printf("---\n");
-
 	float m00 = cvmGet(m, 0, 0); float m01 = cvmGet(m, 0, 1); float m02 = cvmGet(m, 0, 2);
 	float m10 = cvmGet(m, 1, 0); float m11 = cvmGet(m, 1, 1); float m12 = cvmGet(m, 1, 2);
 	float m20 = cvmGet(m, 2, 0); float m21 = cvmGet(m, 2, 1); float m22 = cvmGet(m, 2, 2);
 
-	printf("%7.4f\t%7.4f\t%7.4f\n", m00, m01, m02);
-	printf("%7.4f\t%7.4f\t%7.4f\n", m10, m11, m12);
-	printf("%7.4f\t%7.4f\t%7.4f\n", m20, m21, m22);
+	printf("[%11.4f\t%11.4f\t%11.4f\n",  m00, m01, m02);
+	printf(" %11.4f\t%11.4f\t%11.4f\n",  m10, m11, m12);
+	printf(" %11.4f\t%11.4f\t%11.4f] --- %s\n", m20, m21, m22, name.c_str());
+}
+
+
+float rand(const float n) // return [-n:+n]
+{
+	const float temp = (rand() % 201 - 100) * 0.01f; // -1.00f to +1.00f
+	return n * temp;
 }
 
 
@@ -93,11 +107,24 @@ int main(int argc, char **argv)
 	const char *src2 = NULL;
 	const char *dst = NULL;
 
+	// default color
+	int default_r = 128;
+	int default_g = 128;
+	int default_b = 255;
+
+	bool no_frame = false;
+
 	for (int i = 1; i < argc - 1; i++)
 	{
 		if (strcmp(argv[i], "-src1") == 0) src1 = argv[++i];
 		if (strcmp(argv[i], "-src2") == 0) src2 = argv[++i];
 		if (strcmp(argv[i], "-dst") == 0) dst = argv[++i];
+
+		if (strcmp(argv[i], "-r") == 0) default_r = atoi(argv[++i]);
+		if (strcmp(argv[i], "-g") == 0) default_g = atoi(argv[++i]);
+		if (strcmp(argv[i], "-b") == 0) default_b = atoi(argv[++i]);
+
+		if (strcmp(argv[i], "-no_frame") == 0) no_frame = (atoi(argv[++i]) == 1);
 	}
 
 	if (src1 == NULL || src2 == NULL)
@@ -150,19 +177,21 @@ int main(int argc, char **argv)
 						const int w2 = w / 2;
 						const int h2 = h / 2;
 
-						const float theta_x = 0;
-						const float theta_y = 0;
-						const float theta_z = index;
+						const float theta_x = rand(30);
+						const float theta_y = rand(30);
+						const float theta_z = rand(30);
 
 						const float tx = 0;
 						const float ty = 0;
 						const float tz = image1->width;
 
+						const float f = 0.5f + rand(0.1f);
+
 #if 1
 						// A
 						CvMat *a = cvCreateMat(4, 4, CV_32F);
-						cvmSet(a, 0, 0, w);   cvmSet(a, 0, 1, 0.0); cvmSet(a, 0, 2, w2);  cvmSet(a, 0, 3, 0.0);
-						cvmSet(a, 1, 0, 0.0); cvmSet(a, 1, 1, w);   cvmSet(a, 1, 2, h2);  cvmSet(a, 1, 3, 0.0);
+						cvmSet(a, 0, 0, w*f); cvmSet(a, 0, 1, 0.0); cvmSet(a, 0, 2, w2);  cvmSet(a, 0, 3, 0.0);
+						cvmSet(a, 1, 0, 0.0); cvmSet(a, 1, 1, w*f); cvmSet(a, 1, 2, h2);  cvmSet(a, 1, 3, 0.0);
 						cvmSet(a, 2, 0, 0.0); cvmSet(a, 2, 1, 0.0); cvmSet(a, 2, 2, 1.0); cvmSet(a, 2, 3, 0.0);
 						cvmSet(a, 3, 0, 0.0); cvmSet(a, 3, 1, 0.0); cvmSet(a, 3, 2, 0.0); cvmSet(a, 3, 3, 1.0);
 
@@ -174,30 +203,30 @@ int main(int argc, char **argv)
 
 						const float theta_x_rad = theta_x / 180 * 3.141592f;
 						CvMat *rx = cvCreateMat(3, 3, CV_32F);
-						cvmSet(rx, 0, 0, cos(theta_x_rad)); cvmSet(rx, 0, 1, -sin(theta_x_rad)); cvmSet(rx, 0, 2, 0.0);
-						cvmSet(rx, 1, 0, sin(theta_x_rad)); cvmSet(rx, 1, 1,  cos(theta_x_rad)); cvmSet(rx, 1, 2, 0.0);
-						cvmSet(rx, 2, 0, 0.0);              cvmSet(rx, 2, 1, 0.0);               cvmSet(rx, 2, 2, 1.0);
-						printCvMat(rx);
+						cvmSet(rx, 0, 0, 1.0); cvmSet(rx, 0, 1, 0.0);              cvmSet(rx, 0, 2, 0.0);
+						cvmSet(rx, 1, 0, 0.0); cvmSet(rx, 1, 1, cos(theta_x_rad)); cvmSet(rx, 1, 2, -sin(theta_x_rad));
+						cvmSet(rx, 2, 0, 0.0); cvmSet(rx, 2, 1, sin(theta_x_rad)); cvmSet(rx, 2, 2,  cos(theta_x_rad));
+						prtCvMat(rx, "Rx");
 
 						const float theta_y_rad = theta_y / 180 * 3.141592f;
 						CvMat *ry = cvCreateMat(3, 3, CV_32F);
-						cvmSet(ry, 0, 0, 1.0); cvmSet(ry, 0, 1, 0.0);              cvmSet(ry, 0, 2, 0.0);
-						cvmSet(ry, 1, 0, 0.0); cvmSet(ry, 1, 1, cos(theta_y_rad)); cvmSet(ry, 1, 2, -sin(theta_y_rad));
-						cvmSet(ry, 2, 0, 0.0); cvmSet(ry, 2, 1, sin(theta_y_rad)); cvmSet(ry, 2, 2,  cos(theta_y_rad));
-						printCvMat(ry);
+						cvmSet(ry, 0, 0,  cos(theta_y_rad)); cvmSet(ry, 0, 1, 0.0); cvmSet(ry, 0, 2, sin(theta_y_rad));
+						cvmSet(ry, 1, 0, 0);                 cvmSet(ry, 1, 1, 1.0); cvmSet(ry, 1, 2, 0.0);
+						cvmSet(ry, 2, 0, -sin(theta_y_rad)); cvmSet(ry, 2, 1, 0.0); cvmSet(ry, 2, 2, cos(theta_y_rad));
+						prtCvMat(ry, "Ry");
 
 						const float theta_z_rad = theta_z / 180 * 3.141592f;
 						CvMat *rz = cvCreateMat(3, 3, CV_32F);
-						cvmSet(rz, 0, 0,  cos(theta_z_rad)); cvmSet(rz, 0, 1, 0.0); cvmSet(rz, 0, 2, sin(theta_z_rad));
-						cvmSet(rz, 1, 0, 0);                 cvmSet(rz, 1, 1, 1.0); cvmSet(rz, 1, 2, 0.0);
-						cvmSet(rz, 2, 0, -sin(theta_z_rad)); cvmSet(rz, 2, 1, 0.0); cvmSet(rz, 2, 2, cos(theta_z_rad));
-						printCvMat(rz);
+						cvmSet(rz, 0, 0, cos(theta_z_rad)); cvmSet(rz, 0, 1, -sin(theta_z_rad)); cvmSet(rz, 0, 2, 0.0);
+						cvmSet(rz, 1, 0, sin(theta_z_rad)); cvmSet(rz, 1, 1,  cos(theta_z_rad)); cvmSet(rz, 1, 2, 0.0);
+						cvmSet(rz, 2, 0, 0.0);              cvmSet(rz, 2, 1, 0.0);               cvmSet(rz, 2, 2, 1.0);
+						prtCvMat(rz, "Rz");
 
 						cvMatMul(rx, r, r);
 						cvMatMul(ry, r, r);
 						cvMatMul(rz, r, r);
 
-						printCvMat(r);
+						prtCvMat(r, "R");
 
 						// T
 						CvMat *T0 = cvCreateMat(4, 4, CV_32F);
@@ -231,9 +260,9 @@ int main(int argc, char **argv)
 						cvmSet(homography, 0, 0, cvmGet(ak, 0, 0)); cvmSet(homography, 0, 1, cvmGet(ak, 0, 1)); cvmSet(homography, 0, 2, cvmGet(ak, 0, 3));
 						cvmSet(homography, 1, 0, cvmGet(ak, 1, 0)); cvmSet(homography, 1, 1, cvmGet(ak, 1, 1)); cvmSet(homography, 1, 2, cvmGet(ak, 1, 3));
 						cvmSet(homography, 2, 0, cvmGet(ak, 2, 0)); cvmSet(homography, 2, 1, cvmGet(ak, 2, 1)); cvmSet(homography, 2, 2, cvmGet(ak, 2, 3));
-						printCvMat(homography);
+						prtCvMat(homography, "H");
 
-						cvWarpPerspective(image1, image, homography, 9, CV_RGB(128,128,255));
+						cvWarpPerspective(image1, image, homography, 9, CV_RGB(default_r, default_g, default_b));
 
 						const float h00 = cvmGet(homography, 0, 0);
 						const float h01 = cvmGet(homography, 0, 1);
@@ -268,7 +297,8 @@ int main(int argc, char **argv)
 						const float p1x = max(max(ltx, rtx), max(lbx, rbx));
 						const float p1y = max(max(lty, rty), max(lby, rby));
 
-						cvRectangle(image, cvPoint(p0x, p0y), cvPoint(p1x, p1y), CV_RGB(255, 0, 0));
+						if (!no_frame)
+							cvRectangle(image, cvPoint(p0x, p0y), cvPoint(p1x, p1y), CV_RGB(255, 0, 0));
 
 						cvReleaseMat(&T);
 
