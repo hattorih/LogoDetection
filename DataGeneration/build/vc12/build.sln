@@ -7,20 +7,38 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "build", "build\build.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataGenerator", "DataGenerator\DataGenerator.vcxproj", "{79587C4D-1D24-4BAA-A915-0589A8F14932}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BlendingTool", "BlendingTool\BlendingTool.vcxproj", "{AC78758F-F43A-4FD2-82E6-240F1CAB1122}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3AF5A4E8-F7A1-4EF6-B59F-0E77966BAABE}.Debug|Win32.ActiveCfg = Debug|x64
 		{3AF5A4E8-F7A1-4EF6-B59F-0E77966BAABE}.Debug|x64.ActiveCfg = Debug|x64
 		{3AF5A4E8-F7A1-4EF6-B59F-0E77966BAABE}.Debug|x64.Build.0 = Debug|x64
+		{3AF5A4E8-F7A1-4EF6-B59F-0E77966BAABE}.Release|Win32.ActiveCfg = Release|x64
 		{3AF5A4E8-F7A1-4EF6-B59F-0E77966BAABE}.Release|x64.ActiveCfg = Release|x64
 		{3AF5A4E8-F7A1-4EF6-B59F-0E77966BAABE}.Release|x64.Build.0 = Release|x64
+		{79587C4D-1D24-4BAA-A915-0589A8F14932}.Debug|Win32.ActiveCfg = Debug|Win32
+		{79587C4D-1D24-4BAA-A915-0589A8F14932}.Debug|Win32.Build.0 = Debug|Win32
 		{79587C4D-1D24-4BAA-A915-0589A8F14932}.Debug|x64.ActiveCfg = Debug|x64
 		{79587C4D-1D24-4BAA-A915-0589A8F14932}.Debug|x64.Build.0 = Debug|x64
+		{79587C4D-1D24-4BAA-A915-0589A8F14932}.Release|Win32.ActiveCfg = Release|Win32
+		{79587C4D-1D24-4BAA-A915-0589A8F14932}.Release|Win32.Build.0 = Release|Win32
 		{79587C4D-1D24-4BAA-A915-0589A8F14932}.Release|x64.ActiveCfg = Release|x64
 		{79587C4D-1D24-4BAA-A915-0589A8F14932}.Release|x64.Build.0 = Release|x64
+		{AC78758F-F43A-4FD2-82E6-240F1CAB1122}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AC78758F-F43A-4FD2-82E6-240F1CAB1122}.Debug|Win32.Build.0 = Debug|Win32
+		{AC78758F-F43A-4FD2-82E6-240F1CAB1122}.Debug|x64.ActiveCfg = Debug|x64
+		{AC78758F-F43A-4FD2-82E6-240F1CAB1122}.Debug|x64.Build.0 = Debug|x64
+		{AC78758F-F43A-4FD2-82E6-240F1CAB1122}.Release|Win32.ActiveCfg = Release|Win32
+		{AC78758F-F43A-4FD2-82E6-240F1CAB1122}.Release|Win32.Build.0 = Release|Win32
+		{AC78758F-F43A-4FD2-82E6-240F1CAB1122}.Release|x64.ActiveCfg = Release|x64
+		{AC78758F-F43A-4FD2-82E6-240F1CAB1122}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

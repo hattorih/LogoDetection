@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\DataGenerator\main.cpp">
+    <ClCompile Include="..\..\..\src\BlendingTool\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

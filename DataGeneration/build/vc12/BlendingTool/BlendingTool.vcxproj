@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{79587C4D-1D24-4BAA-A915-0589A8F14932}</ProjectGuid>
-    <RootNamespace>DataGenerator</RootNamespace>
+    <ProjectGuid>{AC78758F-F43A-4FD2-82E6-240F1CAB1122}</ProjectGuid>
+    <RootNamespace>BlendingTool</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -126,7 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\DataGenerator\main.cpp" />
+    <ClCompile Include="..\..\..\src\BlendingTool\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

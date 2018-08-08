@@ -6,8 +6,8 @@
 #include <windows.h>
 
 
-const int W = 1920;
-const int H = 1080;
+const int W = 320; // 1920;
+const int H = 180; // 1080;
 
 const float aspect = (float)W / (float)H;
 const float aspectInv = 1.0f / aspect;
