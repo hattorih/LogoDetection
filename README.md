@@ -5,11 +5,11 @@ Logo Detection
 
 Simulation based projection used a typical camera model:
 
-<img src=".\Common\data\projection.jpg" width="720">
+<img src=".\DataGeneration\doc\projection.jpg" width="720">
 
 Generated training samples:
 
-<img src=".\Common\data\sample.jpg" width="640">
+<img src=".\DataGeneration\doc\sample.jpg" width="640">
 
 ## Requirement
 
@@ -22,11 +22,11 @@ This code is tested with the following configuration:
 
 In the following commands, you can generate various sizes and angles of logos.
 
-$ .\DataGeneration\bin\vc12_x64_Release\DataGenerator.bat
+`$ .\DataGeneration\bin\vc12_x64_Release\DataGenerator.bat`
 
 Then, you can blend them with any background images.
 
-$ .\DataGeneration\bin\vc12_x64_Release\BlendingTool.bat
+`$ .\DataGeneration\bin\vc12_x64_Release\BlendingTool.bat`
 
 ## License
 
