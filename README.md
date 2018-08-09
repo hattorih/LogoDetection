@@ -3,7 +3,11 @@ Logo Detection
 
 ## Demo
 
+Simulation based projection used a typical camera model:
+
 <img src=".\Common\data\projection.jpg" width="640">
+
+Generated training samples:
 
 <img src=".\Common\data\sample.jpg" width="640">
 
